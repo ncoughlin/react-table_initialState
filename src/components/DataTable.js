@@ -1,5 +1,5 @@
 import React from "react";
-import { useTable, useFilters } from "react-table";
+import { useTable, useFilters, useSortBy } from "react-table";
 
 // utilities
 import { matchSorterFn } from "../utilities/sorting";
@@ -8,6 +8,7 @@ const DataTable = (props) => {
   // MEMOS
   const data = React.useMemo(() => props.data, [props.data]);
   const columns = React.useMemo(() => props.columns, [props.columns]);
+  const initialState = React.useMemo(() => props.initialState);
   const defaultColumn = React.useMemo(
     () => ({
       // Let's set up our default Filter UI
@@ -34,9 +35,11 @@ const DataTable = (props) => {
       columns,
       data,
       defaultColumn,
-      filterTypes
+      filterTypes,
+      initialState
     },
-    useFilters
+    useFilters,
+    useSortBy
   );
 
   // RENDERING
@@ -47,8 +50,16 @@ const DataTable = (props) => {
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
               <th {...column.getHeaderProps()}>
-                {column.render("Header")}
-                {/* Render the columns filter UI */}
+                <div>
+                  {column.render("Header")}
+                  <span>
+                    {column.isSorted
+                      ? column.isSortedDesc
+                        ? " 🔽"
+                        : " 🔼"
+                      : ""}
+                  </span>
+                </div>
                 <div>{column.canFilter ? column.render("Filter") : null}</div>
               </th>
             ))}

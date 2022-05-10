@@ -43,13 +43,30 @@ const columns = [
   }
 ];
 
+const initialState = {
+  sortBy: [
+    {
+      id: "lastName",
+      desc: false
+    }
+  ],
+  filters: [
+    {
+      id: "status",
+      value: "single"
+    }
+  ]
+};
+
 class PeopleDataTable extends Component {
   // Loading must be handled here because DataTable MUST have data on load
   renderTable() {
     if (!data) {
       return <Loading />;
     } else {
-      return <Datatable data={data} columns={columns} />;
+      return (
+        <Datatable data={data} columns={columns} initialState={initialState} />
+      );
     }
   }
 
